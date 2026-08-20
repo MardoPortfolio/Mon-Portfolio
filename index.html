@@ -9,7 +9,7 @@
 <!-- Polices Google Fonts. Poppins pour les titres, Inter pour le texte courant. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
   /* ============================================================
@@ -20,9 +20,11 @@
     --bg-light: #F3EADF;
     --bg-card: #FFFFFF;
     --dark: #13120D;
+    --dark-glass-base: #1E1C14;
     --accent-secondary: #916654;
     --accent-primary: #D19C65;
     --pure-black: #000000;
+    --gradient-accent: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
 
     --font-title: 'Poppins', sans-serif;
     --font-body: 'Inter', sans-serif;
@@ -31,7 +33,8 @@
     --radius-card: 16px;
     --radius-btn: 999px;
     --shadow-card: 0 8px 24px rgba(19, 18, 13, 0.08);
-    --shadow-card-hover: 0 16px 32px rgba(19, 18, 13, 0.14);
+    --shadow-card-hover: 0 20px 40px rgba(19, 18, 13, 0.16);
+    --ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   /* ============================================================
@@ -47,6 +50,7 @@
     background: var(--bg-light);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
   img, video{ max-width: 100%; display: block; }
@@ -65,11 +69,12 @@
      ============================================================ */
   h1, h2, h3{
     font-family: var(--font-title);
-    line-height: 1.2;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
   }
 
   h1{
-    font-size: clamp(2.5rem, 1.6rem + 4vw, 4.75rem);
+    font-size: clamp(2.25rem, 1.6rem + 3vw, 3.5rem);
     font-weight: 700;
     color: var(--pure-black);
   }
@@ -77,6 +82,7 @@
   h2{
     font-size: clamp(1.75rem, 1.4rem + 1.6vw, 2.75rem);
     font-weight: 600;
+    letter-spacing: -0.01em;
   }
 
   h3{
@@ -85,6 +91,13 @@
   }
 
   p{ font-size: 1rem; }
+
+  .gradient-text{
+    background-image: var(--gradient-accent);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
 
   .kicker{
     display: inline-block;
@@ -107,6 +120,8 @@
     vertical-align: middle;
   }
 
+  .on-dark .kicker{ color: var(--accent-primary); }
+
   /* ============================================================
      4. MISE EN PAGE GÉNÉRALE
      ============================================================ */
@@ -114,6 +129,8 @@
     max-width: var(--container-w);
     margin-inline: auto;
     padding-inline: 24px;
+    position: relative;
+    z-index: 2;
   }
 
   section{
@@ -135,11 +152,6 @@
     margin-bottom: 40px;
   }
 
-  .section-head.center{
-    margin-inline: auto;
-    text-align: center;
-  }
-
   .section-lead{
     color: var(--dark);
     opacity: 0.75;
@@ -156,6 +168,17 @@
 
   .on-white{ background: var(--bg-card); }
 
+  /* texture de grain, sections sombres uniquement */
+  .on-dark::before{
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.045;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
   /* ============================================================
      5. BOUTONS
      ============================================================ */
@@ -171,18 +194,13 @@
     border-radius: var(--radius-btn);
     border: none;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 0 0 rgba(209, 156, 101, 0);
+    transition: transform 0.25s var(--ease-soft), box-shadow 0.25s var(--ease-soft);
   }
 
   .btn:hover{
-    transform: scale(1.03);
-    box-shadow: 0 10px 20px rgba(19, 18, 13, 0.18);
-  }
-
-  .btn-outline{
-    background: transparent;
-    border: 2px solid var(--accent-secondary);
-    color: inherit;
+    transform: scale(1.04);
+    box-shadow: 0 12px 32px rgba(209, 156, 101, 0.35);
   }
 
   /* ============================================================
@@ -192,6 +210,8 @@
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     gap: 24px;
+    position: relative;
+    z-index: 2;
   }
 
   .span-6{ grid-column: span 6; }
@@ -203,20 +223,18 @@
   }
 
   /* ============================================================
-     7. CARTES
+     7. CARTES CLAIRES (section SEO et WordPress)
      ============================================================ */
   .card{
     background: var(--bg-card);
     border-radius: var(--radius-card);
     box-shadow: var(--shadow-card);
     overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    position: relative;
-    z-index: 1;
+    transition: transform 0.25s var(--ease-soft), box-shadow 0.25s var(--ease-soft);
   }
 
   .card:hover{
-    transform: translateY(-4px);
+    transform: translateY(-6px);
     box-shadow: var(--shadow-card-hover);
   }
 
@@ -237,38 +255,67 @@
 
   .card-body .btn{ margin-top: 18px; }
 
-  /* cartes sur fond sombre, section funnel building */
-  .card-dark{
-    background: #1E1C14;
+  /* ============================================================
+     8. CARTES EN VERRE (section funnel building, fond sombre)
+     ============================================================ */
+  .card-glass{
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     color: var(--bg-light);
+    transition: transform 0.25s var(--ease-soft), box-shadow 0.25s var(--ease-soft), border-color 0.25s var(--ease-soft);
   }
-  .card-dark h3{ color: #FFFFFF; }
-  .card-dark p{ opacity: 0.75; }
+
+  .card-glass h3{ color: #FFFFFF; }
+  .card-glass p{ opacity: 0.75; }
+
+  .card-glass:hover{
+    transform: translateY(-6px);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+    border-color: rgba(255, 255, 255, 0.28);
+  }
 
   /* ============================================================
-     8. HERO
+     9. HERO
      ============================================================ */
   #hero{
     padding-top: 140px;
   }
 
-  /* motif de fond façon plan d'architecte, très discret. C'est l'élément
-     signature de la page : une trame de construction, en écho au
-     positionnement "je construis des sites". */
-  #hero::before{
-    content: "";
+  /* mesh gradient : formes floues en arrière-plan, élément signature
+     de la page. Suivent légèrement le curseur sur desktop (voir JS). */
+  .mesh-blob{
     position: absolute;
-    inset: 0;
-    background-image:
-      repeating-linear-gradient(0deg, rgba(19,18,13,0.05) 0 1px, transparent 1px 64px),
-      repeating-linear-gradient(90deg, rgba(19,18,13,0.05) 0 1px, transparent 1px 64px);
+    border-radius: 50%;
+    filter: blur(100px);
     z-index: 0;
     pointer-events: none;
+    will-change: transform;
+  }
+
+  .blob-1{
+    width: 420px; height: 420px;
+    background: var(--accent-primary);
+    opacity: 0.35;
+    top: -12%; left: -8%;
+  }
+
+  .blob-2{
+    width: 380px; height: 380px;
+    background: var(--accent-secondary);
+    opacity: 0.28;
+    top: 8%; right: -10%;
+  }
+
+  .blob-3{
+    width: 320px; height: 320px;
+    background: var(--accent-primary);
+    opacity: 0.22;
+    bottom: -18%; left: 32%;
   }
 
   .hero-inner{
-    position: relative;
-    z-index: 1;
     display: flex;
     flex-direction: column-reverse;
     gap: 40px;
@@ -283,16 +330,19 @@
     border: 4px solid var(--accent-primary);
     flex-shrink: 0;
     background: var(--bg-card);
+    box-shadow: 0 20px 40px rgba(209, 156, 101, 0.25);
   }
 
   .hero-photo img{ width: 100%; height: 100%; object-fit: cover; }
 
   .hero-role{
     font-family: var(--font-title);
-    font-weight: 600;
-    font-size: clamp(1.1rem, 1rem + 0.6vw, 1.4rem);
-    color: var(--accent-secondary);
-    margin-top: 10px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    font-size: clamp(1.9rem, 1.3rem + 3vw, 3.25rem);
+    color: var(--dark);
+    line-height: 1.15;
+    margin-top: 14px;
   }
 
   .hero-tagline{
@@ -315,7 +365,7 @@
   }
 
   /* ============================================================
-     9. STICKY HEADER
+     10. EN-TÊTE FIXE
      ============================================================ */
   .site-header{
     position: fixed;
@@ -344,12 +394,22 @@
   }
 
   /* ============================================================
-     10. À PROPOS
+     11. SÉPARATEURS DE SECTION
+     ============================================================ */
+  .divider{ line-height: 0; }
+  .divider svg{ display: block; width: 100%; height: 80px; }
+
+  @media (min-width: 1024px){
+    .divider svg{ height: 110px; }
+  }
+
+  /* ============================================================
+     12. À PROPOS
      ============================================================ */
   #about p{ max-width: 68ch; }
 
   /* ============================================================
-     11. COMPÉTENCES
+     13. COMPÉTENCES
      ============================================================ */
   .skills-grid{
     display: grid;
@@ -374,6 +434,12 @@
     padding: 10px 0;
     border-bottom: 1px solid rgba(19, 18, 13, 0.08);
     font-size: 0.95rem;
+    transition: padding-left 0.2s ease, color 0.2s ease;
+  }
+
+  .skills-col li:hover{
+    padding-left: 6px;
+    color: var(--accent-secondary);
   }
 
   .skills-col li::before{
@@ -386,102 +452,79 @@
   }
 
   /* ============================================================
-     12. ICÔNES FLOTTANTES, SECTION SEO ET WORDPRESS
-     Repères décoratifs en arrière-plan, jamais des logos officiels
-     reproduits à l'identique. Remplaçables par de vraies icônes SVG
-     de marque si besoin.
+     14. LOGOS FLOTTANTS, VRAIS SVG DE MARQUE VIA SIMPLE ICONS
      ============================================================ */
   .float-icon{
     position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 3px solid var(--dark);
-    border-radius: 50%;
-    font-family: var(--font-title);
-    font-weight: 700;
-    color: var(--dark);
-    opacity: 0.1;
     z-index: 0;
+    opacity: 0.15;
     pointer-events: none;
-    animation: float 5s ease-in-out infinite;
+    animation: floatRotate 5s ease-in-out infinite;
   }
 
-  .float-icon.google{
-    width: 160px;
-    height: 160px;
-    font-size: 64px;
-    top: 8%;
-    left: 4%;
+  .float-icon.google{ width: 150px; top: 8%; left: 4%; }
+  .float-icon.wp{ width: 190px; bottom: 6%; right: 5%; animation-delay: 1s; }
+
+  @keyframes floatRotate{
+    0%, 100%{ transform: translateY(0) rotate(-3deg); }
+    50%{ transform: translateY(-15px) rotate(3deg); }
   }
 
-  .float-icon.wp{
-    width: 200px;
-    height: 200px;
-    font-size: 80px;
-    bottom: 6%;
-    right: 5%;
-    animation-delay: 1s;
-  }
-
-  @keyframes float{
-    0%, 100%{ transform: translateY(0); }
-    50%{ transform: translateY(-15px); }
-  }
-
-  /* ============================================================
-     13. RÉALISATIONS SEO ET WORDPRESS
-     ============================================================ */
-  #seo-work .grid-12{ position: relative; z-index: 1; }
-
-  /* ============================================================
-     14. RÉALISATIONS FUNNEL BUILDING
-     ============================================================ */
   .floating-logo{
     position: absolute;
+    z-index: 0;
+    opacity: 0.16;
+    pointer-events: none;
+    animation-name: floatRotate;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+
+  .floating-logo.l1{ width: 120px; top: 6%; left: 6%; animation-duration: 4s; animation-delay: 0s; }
+  .floating-logo.l2{ width: 150px; top: 42%; right: 8%; animation-duration: 5s; animation-delay: 1.5s; }
+  .floating-logo.l3{ width: 100px; bottom: 8%; left: 30%; animation-duration: 6s; animation-delay: 3s; }
+
+  /* ============================================================
+     15. BLOCS DE STATISTIQUES
+     ============================================================ */
+  .stats-row{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    margin-bottom: 48px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .stat{ display: flex; flex-direction: column; gap: 4px; }
+
+  .stat-number{
     font-family: var(--font-title);
     font-weight: 700;
-    color: var(--accent-primary);
-    opacity: 0.12;
-    z-index: 0;
-    pointer-events: none;
-    border: 3px solid var(--accent-primary);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: float ease-in-out infinite;
+    font-size: clamp(2rem, 1.6rem + 2vw, 3rem);
+    line-height: 1;
   }
 
-  .floating-logo.l1{
-    width: 130px; height: 130px; font-size: 50px;
-    top: 6%; left: 6%;
-    animation-duration: 4s;
-    animation-delay: 0s;
-  }
-  .floating-logo.l2{
-    width: 170px; height: 170px; font-size: 64px;
-    top: 40%; right: 8%;
-    animation-duration: 5s;
-    animation-delay: 1.5s;
-  }
-  .floating-logo.l3{
-    width: 110px; height: 110px; font-size: 42px;
-    bottom: 8%; left: 30%;
-    animation-duration: 6s;
-    animation-delay: 3s;
+  .stat-label{
+    font-size: 0.85rem;
+    color: var(--bg-light);
+    opacity: 0.7;
+    max-width: 22ch;
   }
 
-  #funnel-work .grid-12{ position: relative; z-index: 1; }
-
+  /* ============================================================
+     16. ENCADRÉ CITATION
+     ============================================================ */
   .quote-box{
     position: relative;
-    z-index: 1;
+    z-index: 2;
     margin-top: 48px;
     max-width: 720px;
     margin-inline: auto;
     border: 2px solid var(--accent-primary);
     border-radius: var(--radius-card);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px);
     padding: 32px;
     text-align: center;
   }
@@ -513,15 +556,21 @@
   }
 
   /* ============================================================
-     15. TÉMOIGNAGES VIDÉO
+     17. TÉMOIGNAGES VIDÉO
      ============================================================ */
   .video-card{
     position: relative;
-    z-index: 1;
+    z-index: 2;
     background: var(--bg-card);
     border-radius: var(--radius-card);
     overflow: hidden;
     box-shadow: var(--shadow-card);
+    transition: transform 0.25s var(--ease-soft), box-shadow 0.25s var(--ease-soft);
+  }
+
+  .video-card:hover{
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-card-hover);
   }
 
   .video-frame{
@@ -532,6 +581,34 @@
 
   .video-frame video{ width: 100%; height: 100%; object-fit: cover; }
 
+  /* cadre stylisé tant qu'aucune vidéo réelle n'est fournie */
+  .video-placeholder{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    color: var(--bg-light);
+    background: linear-gradient(160deg, var(--dark-glass-base), var(--dark));
+  }
+
+  .video-placeholder .play-icon{
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 2px solid var(--accent-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-primary);
+    font-size: 1.1rem;
+  }
+
+  .video-placeholder p{
+    font-size: 0.85rem;
+    opacity: 0.7;
+  }
+
   .video-card .video-label{
     padding: 14px 18px;
     font-size: 0.9rem;
@@ -540,14 +617,15 @@
   }
 
   /* ============================================================
-     16. APPEL À L'ACTION FINAL
+     18. APPEL À L'ACTION FINAL
      ============================================================ */
   #cta-final{ text-align: center; }
-  #cta-final h2{ max-width: 26ch; margin-inline: auto; }
-  #cta-final .btn{ margin-top: 32px; }
+  #cta-final h2{ max-width: 26ch; margin-inline: auto; position: relative; z-index: 2; }
+  #cta-final .section-lead{ position: relative; z-index: 2; }
+  #cta-final .btn{ margin-top: 32px; position: relative; z-index: 2; }
 
   /* ============================================================
-     17. PIED DE PAGE
+     19. PIED DE PAGE
      ============================================================ */
   footer{
     background: var(--dark);
@@ -561,12 +639,13 @@
   footer a{ color: var(--accent-primary); }
 
   /* ============================================================
-     18. RÉVÉLATION AU DÉFILEMENT
+     20. RÉVÉLATION AU DÉFILEMENT, EN CASCADE
      ============================================================ */
   .reveal{
     opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
+    transform: translateY(24px);
+    transition: opacity 0.7s var(--ease-soft), transform 0.7s var(--ease-soft);
+    transition-delay: calc(var(--i, 0) * 0.1s);
   }
 
   .reveal.is-visible{
@@ -575,7 +654,7 @@
   }
 
   /* ============================================================
-     19. ACCESSIBILITÉ, RÉDUCTION DE MOUVEMENT
+     21. ACCESSIBILITÉ, RÉDUCTION DE MOUVEMENT
      Toutes les animations et transitions sont neutralisées si
      l'utilisateur a activé cette préférence système.
      ============================================================ */
@@ -587,6 +666,15 @@
       scroll-behavior: auto !important;
     }
   }
+
+  /* ============================================================
+     22. AJUSTEMENTS FINS SOUS 640 PIXELS
+     ============================================================ */
+  @media (max-width: 640px){
+    .stats-row{ gap: 24px; }
+    .mesh-blob{ filter: blur(70px); }
+    .blob-1, .blob-2, .blob-3{ width: 240px; height: 240px; }
+  }
 </style>
 </head>
 <body>
@@ -596,32 +684,44 @@
      ============================================================ -->
 <header class="site-header">
   <span class="brand">Cédric Mardochée</span>
-  <!-- PLACEHOLDER : remplacer [LIEN_WHATSAPP] par le lien WhatsApp réel -->
-  <a class="btn" href="[LIEN_WHATSAPP]" target="_blank" rel="noopener">Me contacter</a>
+  <!-- REMPLACER: [LIEN_WHATSAPP] -->
+  <a class="btn" href="#">Me contacter</a>
 </header>
 
 <main>
 
   <!-- ============================================================
        1. HERO
+       Fond mesh gradient : trois formes floues D19C65 / 916654 sur
+       fond F3EADF, suivi léger du curseur sur desktop (voir script).
        ============================================================ -->
   <section id="hero">
+    <div class="mesh-blob blob-1" aria-hidden="true"></div>
+    <div class="mesh-blob blob-2" aria-hidden="true"></div>
+    <div class="mesh-blob blob-3" aria-hidden="true"></div>
+
     <div class="container hero-inner">
       <div>
         <h1>Cédric Mardochée</h1>
-        <p class="hero-role">Consultant SEO et développeur WordPress</p>
+        <p class="hero-role">Consultant <span class="gradient-text">SEO</span> et Développeur <span class="gradient-text">WordPress</span></p>
         <p class="hero-tagline">Je conçois des sites qui remontent dans Google et qui convertissent vos visiteurs en clients.</p>
         <div class="hero-actions">
-          <!-- PLACEHOLDER : remplacer [LIEN_WHATSAPP] par le lien WhatsApp réel -->
-          <a class="btn" href="[LIEN_WHATSAPP]" target="_blank" rel="noopener">Me contacter sur WhatsApp</a>
+          <!-- REMPLACER: [LIEN_WHATSAPP] -->
+          <a class="btn" href="#">Me contacter sur WhatsApp</a>
         </div>
       </div>
       <div class="hero-photo">
-        <!-- PLACEHOLDER : remplacer [PHOTO_PROFIL] par la photo de profil -->
-        <img src="[PHOTO_PROFIL]" alt="Photo de Cédric Mardochée">
+        <!-- REMPLACER: [PHOTO_PROFIL] -->
+        <img src="https://placehold.co/400x400/D19C65/13120D?text=Photo+profil" alt="Photo de Cédric Mardochée">
       </div>
     </div>
   </section>
+
+  <div class="divider" style="background: var(--bg-light);">
+    <svg viewBox="0 0 1440 100" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,40 C240,90 480,0 720,30 C960,60 1200,100 1440,50 L1440,100 L0,100 Z" fill="#FFFFFF"></path>
+    </svg>
+  </div>
 
   <!-- ============================================================
        2. À PROPOS
@@ -632,7 +732,7 @@
         <span class="kicker">Qui je suis</span>
         <h2>À propos</h2>
       </div>
-      <p class="reveal">
+      <p class="reveal" style="--i:1;">
         Mon apprentissage du SEO a commencé sur le terrain. Un mentorat pratique m'a permis de réaliser des audits SEO complets et d'optimiser des fiches Google Business Profile pour de vrais clients. J'ai conçu des sites vitrines WordPress et Elementor pour des artisans, un couvreur et un électricien, avec une attention portée à la structure mobile et au référencement local. En parallèle, j'ai passé un an en freelance sous le nom Funnels Acquisitions. J'y ai accompagné une dizaine de clients en marketing digital et en e-commerce, construit leurs pages de capture et de vente, et organisé leurs webinaires. Cette double expérience me donne un réflexe rare. Je ne me contente pas de rendre un site visible sur Google. Je le construis pour convertir.
       </p>
     </div>
@@ -647,7 +747,7 @@
         <span class="kicker">Ce que je sais faire</span>
         <h2>Compétences et outils</h2>
       </div>
-      <div class="skills-grid reveal">
+      <div class="skills-grid reveal" style="--i:1;">
         <div class="skills-col">
           <h3>SEO et analyse</h3>
           <ul>
@@ -675,11 +775,12 @@
 
   <!-- ============================================================
        4. RÉALISATIONS SEO ET WORDPRESS (fond clair FFFFFF)
+       Logos flottants réels de Google et WordPress, chargés depuis
+       le CDN Simple Icons, en très faible opacité derrière le texte.
        ============================================================ -->
   <section id="seo-work" class="on-white">
-    <!-- icônes flottantes décoratives, désactivées avec la réduction de mouvement -->
-    <div class="float-icon google" aria-hidden="true">G</div>
-    <div class="float-icon wp" aria-hidden="true">W</div>
+    <img class="float-icon google" src="https://cdn.simpleicons.org/google" alt="" aria-hidden="true" loading="lazy" decoding="async">
+    <img class="float-icon wp" src="https://cdn.simpleicons.org/wordpress" alt="" aria-hidden="true" loading="lazy" decoding="async">
 
     <div class="container">
       <div class="section-head reveal">
@@ -689,39 +790,45 @@
       </div>
 
       <div class="grid-12">
-        <article class="card span-6 reveal">
-          <!-- PLACEHOLDER : remplacer [IMAGE_SITE_COUVREUR] par une capture du site -->
-          <img class="card-img" src="[IMAGE_SITE_COUVREUR]" alt="Aperçu du site vitrine du couvreur">
+        <article class="card span-6 reveal" style="--i:1;">
+          <!-- REMPLACER: [IMAGE_SITE_COUVREUR] -->
+          <img class="card-img" src="https://placehold.co/640x400/F3EADF/13120D?text=Site+couvreur" alt="Aperçu du site vitrine du couvreur" loading="lazy" decoding="async">
           <div class="card-body">
             <h3>Site vitrine, couvreur</h3>
             <p>Structure repensée pour la lecture mobile. Référencement local et temps de chargement optimisés.</p>
-            <!-- PLACEHOLDER : remplacer [LIEN_SITE_COUVREUR] par le lien du site -->
-            <a class="btn" href="[LIEN_SITE_COUVREUR]" target="_blank" rel="noopener">Voir le site</a>
+            <!-- REMPLACER: [LIEN_SITE_COUVREUR] -->
+            <a class="btn" href="#">Voir le site</a>
           </div>
         </article>
 
-        <article class="card span-6 reveal">
-          <!-- PLACEHOLDER : remplacer [IMAGE_SITE_ELECTRICIEN] par une capture du site -->
-          <img class="card-img" src="[IMAGE_SITE_ELECTRICIEN]" alt="Aperçu du site vitrine de l'électricien">
+        <article class="card span-6 reveal" style="--i:2;">
+          <!-- REMPLACER: [IMAGE_SITE_ELECTRICIEN] -->
+          <img class="card-img" src="https://placehold.co/640x400/F3EADF/13120D?text=Site+electricien" alt="Aperçu du site vitrine de l'électricien" loading="lazy" decoding="async">
           <div class="card-body">
             <h3>Site vitrine, électricien</h3>
             <p>Arborescence simplifiée pour un parcours mobile fluide. Fiche Google Business Profile et vitesse de chargement travaillées.</p>
-            <!-- PLACEHOLDER : remplacer [LIEN_SITE_ELECTRICIEN] par le lien du site -->
-            <a class="btn" href="[LIEN_SITE_ELECTRICIEN]" target="_blank" rel="noopener">Voir le site</a>
+            <!-- REMPLACER: [LIEN_SITE_ELECTRICIEN] -->
+            <a class="btn" href="#">Voir le site</a>
           </div>
         </article>
       </div>
     </div>
   </section>
 
+  <div class="divider" style="background: #FFFFFF;">
+    <svg viewBox="0 0 1440 100" preserveAspectRatio="none" aria-hidden="true">
+      <polygon points="0,100 1440,0 1440,100" fill="#13120D"></polygon>
+    </svg>
+  </div>
+
   <!-- ============================================================
        5. RÉALISATIONS FUNNEL BUILDING (fond sombre 13120D)
+       Cartes en verre, logos Systeme.io flottants, bloc de stats.
        ============================================================ -->
   <section id="funnel-work" class="on-dark">
-    <!-- logos flottants décoratifs, trois occurrences décalées -->
-    <div class="floating-logo l1" aria-hidden="true">S</div>
-    <div class="floating-logo l2" aria-hidden="true">S</div>
-    <div class="floating-logo l3" aria-hidden="true">S</div>
+    <img class="floating-logo l1" src="https://cdn.simpleicons.org/systeme" alt="" aria-hidden="true" loading="lazy" decoding="async">
+    <img class="floating-logo l2" src="https://cdn.simpleicons.org/systeme" alt="" aria-hidden="true" loading="lazy" decoding="async">
+    <img class="floating-logo l3" src="https://cdn.simpleicons.org/systeme" alt="" aria-hidden="true" loading="lazy" decoding="async">
 
     <div class="container">
       <div class="section-head reveal">
@@ -730,42 +837,57 @@
         <p class="section-lead">Un an de freelance sous le nom Funnels Acquisitions. Dix clients accompagnés en marketing digital et e-commerce.</p>
       </div>
 
+      <div class="stats-row reveal" style="--i:1;">
+        <div class="stat">
+          <span class="stat-number gradient-text">10</span>
+          <span class="stat-label">clients accompagnés en freelance</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number gradient-text">1 an</span>
+          <span class="stat-label">d'expérience en funnel building</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number gradient-text">8 000 €</span>
+          <span class="stat-label">cités par un client comme résultat obtenu</span>
+        </div>
+      </div>
+
       <div class="grid-12">
-        <article class="card card-dark span-4 reveal">
-          <!-- PLACEHOLDER : remplacer [IMAGE_FUNNEL_1] par une capture de la page -->
-          <img class="card-img" src="[IMAGE_FUNNEL_1]" alt="Aperçu de la page de capture, formation marketing digital">
+        <article class="card card-glass span-4 reveal" style="--i:2;">
+          <!-- REMPLACER: [IMAGE_FUNNEL_1] -->
+          <img class="card-img" src="https://placehold.co/640x400/1E1C14/F3EADF?text=Capture+marketing+digital" alt="Aperçu de la page de capture, formation marketing digital" loading="lazy" decoding="async">
           <div class="card-body">
             <h3>Page de capture, formation marketing digital</h3>
             <p>Structure pensée pour maximiser les inscriptions. Copywriting orienté conversion du premier au dernier mot.</p>
-            <!-- PLACEHOLDER : remplacer [LIEN_FUNNEL_1] par le lien de la page -->
-            <a class="btn" href="[LIEN_FUNNEL_1]" target="_blank" rel="noopener">Voir la page</a>
+            <!-- REMPLACER: [LIEN_FUNNEL_1] -->
+            <a class="btn" href="#">Voir la page</a>
           </div>
         </article>
 
-        <article class="card card-dark span-4 reveal">
-          <!-- PLACEHOLDER : remplacer [IMAGE_FUNNEL_2] par une capture de la page -->
-          <img class="card-img" src="[IMAGE_FUNNEL_2]" alt="Aperçu de la page de vente, boîte à outils PME">
+        <article class="card card-glass span-4 reveal" style="--i:3;">
+          <!-- REMPLACER: [IMAGE_FUNNEL_2] -->
+          <img class="card-img" src="https://placehold.co/640x400/1E1C14/F3EADF?text=Vente+boite+a+outils" alt="Aperçu de la page de vente, boîte à outils PME" loading="lazy" decoding="async">
           <div class="card-body">
             <h3>Page de vente, boîte à outils PME</h3>
             <p>Argumentaire construit autour de bénéfices concrets. Appel à l'action clair à chaque section.</p>
-            <!-- PLACEHOLDER : remplacer [LIEN_FUNNEL_2] par le lien de la page -->
-            <a class="btn" href="[LIEN_FUNNEL_2]" target="_blank" rel="noopener">Voir la page</a>
+            <!-- REMPLACER: [LIEN_FUNNEL_2] -->
+            <a class="btn" href="#">Voir la page</a>
           </div>
         </article>
 
-        <article class="card card-dark span-4 reveal">
-          <!-- PLACEHOLDER : remplacer [IMAGE_FUNNEL_3] par une capture de la page -->
-          <img class="card-img" src="[IMAGE_FUNNEL_3]" alt="Aperçu de la page de capture, formation e-commerce">
+        <article class="card card-glass span-4 reveal" style="--i:4;">
+          <!-- REMPLACER: [IMAGE_FUNNEL_3] -->
+          <img class="card-img" src="https://placehold.co/640x400/1E1C14/F3EADF?text=Capture+ecommerce" alt="Aperçu de la page de capture, formation e-commerce" loading="lazy" decoding="async">
           <div class="card-body">
             <h3>Page de capture, formation e-commerce</h3>
             <p>Tunnel conçu pour accompagner le lancement d'un webinaire. Design aligné avec l'identité de la marque cliente.</p>
-            <!-- PLACEHOLDER : remplacer [LIEN_FUNNEL_3] par le lien de la page -->
-            <a class="btn" href="[LIEN_FUNNEL_3]" target="_blank" rel="noopener">Voir la page</a>
+            <!-- REMPLACER: [LIEN_FUNNEL_3] -->
+            <a class="btn" href="#">Voir la page</a>
           </div>
         </article>
       </div>
 
-      <div class="quote-box reveal">
+      <div class="quote-box reveal" style="--i:5;">
         <span class="quote-label">Ce que dit un client</span>
         <p>« Grâce au système mis en place, j'ai généré plus de 8000 euros. »</p>
         <cite>Newton Konin, client Funnels Acquisitions</cite>
@@ -773,47 +895,50 @@
     </div>
   </section>
 
+  <div class="divider" style="background: #13120D;">
+    <svg viewBox="0 0 1440 100" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,50 C240,0 480,100 720,60 C960,20 1200,80 1440,40 L1440,100 L0,100 Z" fill="#F3EADF"></path>
+    </svg>
+  </div>
+
   <!-- ============================================================
        6. TÉMOIGNAGES VIDÉO (fond F3EADF)
+       Aucun lien vidéo fourni pour le moment : cadre stylisé
+       "Vidéo à venir" plutôt qu'un lecteur cassé. À remplacer par
+       une vraie balise video dès que les liens sont disponibles.
        ============================================================ -->
   <section id="testimonials">
     <div class="container">
       <div class="section-head reveal">
-        <span class="kicker">Puis je te faire confiance</span>
+        <span class="kicker">Puis-je te faire confiance</span>
         <h2>Témoignages vidéo</h2>
         <p class="section-lead">Trois clients racontent leur expérience de travail avec Funnels Acquisitions.</p>
       </div>
 
       <div class="grid-12">
-        <div class="video-card span-4 reveal">
-          <div class="video-frame">
-            <!-- PLACEHOLDER : remplacer [VIDEO_1] par le fichier ou lien vidéo -->
-            <video controls preload="none">
-              <source src="[VIDEO_1]" type="video/mp4">
-              Votre navigateur ne prend pas en charge la lecture vidéo.
-            </video>
+        <div class="video-card span-4 reveal" style="--i:1;">
+          <div class="video-frame video-placeholder">
+            <!-- REMPLACER: remplacer ce bloc par une balise video utilisant [VIDEO_1] -->
+            <span class="play-icon" aria-hidden="true">▶</span>
+            <p>Vidéo à venir</p>
           </div>
           <p class="video-label">Témoignage client 1</p>
         </div>
 
-        <div class="video-card span-4 reveal">
-          <div class="video-frame">
-            <!-- PLACEHOLDER : remplacer [VIDEO_2] par le fichier ou lien vidéo -->
-            <video controls preload="none">
-              <source src="[VIDEO_2]" type="video/mp4">
-              Votre navigateur ne prend pas en charge la lecture vidéo.
-            </video>
+        <div class="video-card span-4 reveal" style="--i:2;">
+          <div class="video-frame video-placeholder">
+            <!-- REMPLACER: remplacer ce bloc par une balise video utilisant [VIDEO_2] -->
+            <span class="play-icon" aria-hidden="true">▶</span>
+            <p>Vidéo à venir</p>
           </div>
           <p class="video-label">Témoignage client 2</p>
         </div>
 
-        <div class="video-card span-4 reveal">
-          <div class="video-frame">
-            <!-- PLACEHOLDER : remplacer [VIDEO_3] par le fichier ou lien vidéo -->
-            <video controls preload="none">
-              <source src="[VIDEO_3]" type="video/mp4">
-              Votre navigateur ne prend pas en charge la lecture vidéo.
-            </video>
+        <div class="video-card span-4 reveal" style="--i:3;">
+          <div class="video-frame video-placeholder">
+            <!-- REMPLACER: remplacer ce bloc par une balise video utilisant [VIDEO_3] -->
+            <span class="play-icon" aria-hidden="true">▶</span>
+            <p>Vidéo à venir</p>
           </div>
           <p class="video-label">Témoignage client 3</p>
         </div>
@@ -828,8 +953,8 @@
     <div class="container reveal">
       <h2>Le SEO fait remonter votre site. Le WordPress le rend concret. Le sens de la conversion transforme les visiteurs en clients.</h2>
       <p class="section-lead">C'est cette combinaison que j'apporte à votre équipe.</p>
-      <!-- PLACEHOLDER : remplacer [LIEN_WHATSAPP] par le lien WhatsApp réel -->
-      <a class="btn" href="[LIEN_WHATSAPP]" target="_blank" rel="noopener">Me contacter sur WhatsApp</a>
+      <!-- REMPLACER: [LIEN_WHATSAPP] -->
+      <a class="btn" href="#">Me contacter sur WhatsApp</a>
     </div>
   </section>
 
@@ -840,14 +965,18 @@
      ============================================================ -->
 <footer>
   <p>Cédric Mardochée. Consultant SEO et développeur WordPress.</p>
-  <!-- PLACEHOLDER : remplacer [LIEN_WHATSAPP] par le lien WhatsApp réel -->
-  <p><a href="[LIEN_WHATSAPP]" target="_blank" rel="noopener">Contact WhatsApp</a></p>
+  <!-- REMPLACER: [LIEN_WHATSAPP] -->
+  <p><a href="#">Contact WhatsApp</a></p>
 </footer>
 
 <script>
+  // ============================================================
   // Révélation au défilement, via Intersection Observer.
-  // Chaque élément portant la classe "reveal" apparaît une seule fois
-  // quand il entre dans la zone visible de l'écran.
+  // Chaque élément portant la classe "reveal" apparaît une seule
+  // fois quand il entre dans la zone visible de l'écran. Le délai
+  // en cascade est géré en CSS via la variable --i sur chaque
+  // élément (voir style inline dans le HTML).
+  // ============================================================
   const revealElements = document.querySelectorAll('.reveal');
 
   if ('IntersectionObserver' in window) {
@@ -862,9 +991,45 @@
 
     revealElements.forEach((el) => observer.observe(el));
   } else {
-    // Repli si Intersection Observer n'est pas disponible.
     revealElements.forEach((el) => el.classList.add('is-visible'));
   }
+
+  // ============================================================
+  // Parallaxe légère du mesh gradient dans le Hero, au mouvement
+  // de la souris. Desktop uniquement, jamais si l'utilisateur a
+  // activé la réduction de mouvement.
+  // ============================================================
+  (function initHeroParallax(){
+    const hero = document.querySelector('#hero');
+    const blobs = document.querySelectorAll('.mesh-blob');
+    if (!hero || !blobs.length) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (prefersReducedMotion || !isFinePointer) return;
+
+    let targetX = 0, targetY = 0, currentX = 0, currentY = 0;
+
+    hero.addEventListener('mousemove', (event) => {
+      const rect = hero.getBoundingClientRect();
+      targetX = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
+      targetY = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+    });
+
+    function animateBlobs(){
+      currentX += (targetX - currentX) * 0.05;
+      currentY += (targetY - currentY) * 0.05;
+
+      blobs.forEach((blob, index) => {
+        const depth = (index + 1) * 8;
+        blob.style.transform = `translate(${currentX * depth}px, ${currentY * depth}px)`;
+      });
+
+      requestAnimationFrame(animateBlobs);
+    }
+
+    animateBlobs();
+  })();
 </script>
 
 </body>
